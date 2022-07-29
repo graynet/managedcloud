@@ -8,6 +8,9 @@
 # This script sets active interface MTU to 1424
 # sh /usr/bin/herodeploy/deploy.sh
 #
+# Find optimial MTU
+# ping REMOTE_HOSTNAME -c 10 -M do -s 1500
+# where 1500 is mtu then start subtracting by 28
 
 FILE=/usr/bin/herodeploy/version.txt
 # Check if script has run before
