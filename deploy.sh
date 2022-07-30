@@ -5,7 +5,7 @@
 # MTU Config
 # by Namehero.com
 #
-# This script sets active interface MTU to 1424
+# This script sets active interface MTU to 1376
 # sh /usr/bin/herodeploy/deploy.sh
 #
 # Find optimial MTU
@@ -26,3 +26,11 @@ date '+%Y-%m-%d %H:%M:%S' > version.txt
 ip addr show | awk '/inet.*brd/{print $NF; exit}' > interface.txt
 
 for INTERFACE in $(cat interface.txt ) ; do sed -i -e '$aMTU=1376' /etc/sysconfig/network-scripts/ifcfg-${INTERFACE} ; ip link set ${INTERFACE} mtu 1376 ; done ;
+
+if [[ ! -f $FILE ]]
+then
+    crontab -l > cron
+    echo "00 00 * * 1-5 /usr/bin/sh /usr/bin/herodeploy/deploy.sh" >> cron
+    crontab cron
+    rm cron
+fi
