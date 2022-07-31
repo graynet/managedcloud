@@ -13,5 +13,5 @@
 # I love speed and reliability.
 # But I love your trust.
 # So I am here to keep you safe.  Now drink more caffeine and work harder.
-
+#
 echo "$DATE: The Hero Deployer Updater has been completed." >> deploylog.txt ;

@@ -12,7 +12,10 @@
 # ping REMOTE_HOSTNAME -c 10 -M do -s 1500
 # where 1500 is mtu then start subtracting by 28
 #
+#
+#
 
+# Enter optimial MTU for active interfaces and I'll set that bad boy.
 SETMTU=1376
 
 # Version file and general variables
@@ -30,23 +33,29 @@ fi
 # Set cron if script has not run before
 if [[ ! -f $FILE ]]
 then
-    echo "$DATE: Version file not found.  Setting crontab" >> deploylog.txt
+    echo "$DATE: Version file not found.  Setting crontab." >> deploylog.txt
     # Dump existing crons
     crontab -l > cron
+    echo "$DATE: Existing crons dumped." >> deploylog.txt
     # Add deploy script 1 time a day M-F
     echo "00 00 * * 1-5 /usr/bin/sh /usr/bin/herodeploy/deploy.sh" >> cron
     crontab cron
-    rm cron
     echo "$DATE: Cronjob has been set 00 00 * * 1-5 /usr/bin/sh /usr/bin/herodeploy/deploy.sh" >> deploylog.txt
+    rm cron
+    echo "$DATE: Cron dump file removed." >> deploylog.txt
     echo "$DATE" > version.txt
     echo "$DATE: Version file has been created: $FILE" >> deploylog.txt
 fi
 
 # Check if script needs updated
 # If the version file exists
+
+echo "$DATE: Checking for updates..." >> deploylog.txt
 if test -f "$FILE"; then
+  echo "$DATE: Version file found: $FILE" >> deploylog.txt
     # Get current version
     VERSION=$(cat version.txt)
+    echo "$DATE: Current version is $VERSION." >> deploylog.txt
     timeago='7 days ago'
     dtSec=$(date --date "$VERSION" +'%s')
     taSec=$(date --date "$timeago" +'%s')
@@ -67,7 +76,7 @@ for INTERFACE in $(cat interface.txt) ; do
   echo "$DATE: /etc/sysconfig/network-scripts/ifcfg-$INTERFACE has been updated." >> deploylog.txt ;
   # Set the active link to correct MTU
   ip link set ${INTERFACE} mtu $SETMTU ;
-  echo "$DATE: The active $INTERFACE has been set to $SETMTU." >> deploylog.txt ;
+  echo "$DATE: The active $INTERFACE has been set to $SETMTU mtu." >> deploylog.txt ;
 done ;
 
 # Open DDOS Protected Ports
