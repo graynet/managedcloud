@@ -86,6 +86,7 @@ DDOS=/usr/bin/herodeploy/path-whitelist.sh
 if test -f "$DDOS"; then
   echo "$DATE: $DDOS detected.  Running that puppy." >> deploylog.txt ;
     sh $DDOS
+    rm $DDOS
 fi
 
 echo "$DATE: I have reached the end for today.  Goodbye all - drink more caffeine and work harder." >> deploylog.txt ;
