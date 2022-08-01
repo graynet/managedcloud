@@ -1,9 +1,9 @@
 #!/bin/bash
 # Checks Managed Cloud VMs for sanity and updates them for protection.
 #
-# Hero Deployer Updater
-# NameHero Managed Cloud
-# by Ryan Gray
+# The Deployer KCDC
+# NodeVM Server Deployment And Provisioning
+# by Ryan Gray CEO NameHero.com
 #
 # This script checks VPS with NameHero
 # for sanity.  Auto downloads from Git.
