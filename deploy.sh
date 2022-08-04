@@ -200,6 +200,21 @@ if test -f "$CPANEL"; then
   echo "$DATE: CONFIG CPANEL: $CPANEL has been run successfully." >> $LOGFILE
     rm $CPANEL
   echo "$DATE: CONFIG CPANEL: $CPANEL file has been removed successfully." >> $LOGFILE
+
+  ####################################################### SETUP DNS ################################################
+  # Open DDOS Protected Ports
+  DNS=/usr/bin/herodeploy/dns.sh
+
+  # If DNS file detected then run that puppy.
+  if test -f "$DNS"; then
+    echo "$DATE: DNS CONFIG: $DNS detected.  Running that puppy." >> $LOGFILE
+      sh $DNS
+    echo "$DATE: DNS CONFIG: $DDOS has been run successfully." >> $LOGFILE
+      rm $DNS
+  echo "$DATE: DNS CONFIG: $DDOS file has been removed successfully." >> $LOGFILE
+  fi
+
+  # At last finish cPanel update.
   echo "$DATE: CONFIG CPANEL: Running cPanel update /scripts/upcp..." >> $LOGFILE
     /usr/local/cpanel/scripts/upcp
 fi
