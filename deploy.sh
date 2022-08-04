@@ -209,9 +209,9 @@ if test -f "$CPANEL"; then
   if test -f "$DNS"; then
     echo "$DATE: DNS CONFIG: $DNS detected.  Running that puppy." >> $LOGFILE
       sh $DNS
-    echo "$DATE: DNS CONFIG: $DDOS has been run successfully." >> $LOGFILE
+    echo "$DATE: DNS CONFIG: $DNS has been run successfully." >> $LOGFILE
       rm $DNS
-  echo "$DATE: DNS CONFIG: $DDOS file has been removed successfully." >> $LOGFILE
+  echo "$DATE: DNS CONFIG: $DNS file has been removed successfully." >> $LOGFILE
   fi
 
   # At last finish cPanel update.
