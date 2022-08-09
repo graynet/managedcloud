@@ -214,6 +214,10 @@ if test -f "$CPANEL"; then
   echo "$DATE: CONFIG CPANEL: $CPANEL has been run successfully." >> $LOGFILE
     rm $CPANEL
   echo "$DATE: CONFIG CPANEL: $CPANEL file has been removed successfully." >> $LOGFILE
+  # At last finish cPanel update.
+  #echo "$DATE: CONFIG CPANEL: Running cPanel update /scripts/upcp..." >> $LOGFILE
+ #   /usr/local/cpanel/scripts/upcp
+fi
 
   ####################################################### SETUP DNS ################################################
   # Open DDOS Protected Ports
@@ -228,10 +232,7 @@ if test -f "$CPANEL"; then
   echo "$DATE: DNS CONFIG: $DNS file has been removed successfully." >> $LOGFILE
   fi
 
-  # At last finish cPanel update.
-  echo "$DATE: CONFIG CPANEL: Running cPanel update /scripts/upcp..." >> $LOGFILE
-    /usr/local/cpanel/scripts/upcp
-fi
+
 
 ####################################################### SEND ALERTS ################################################
 # Send Email Alert
