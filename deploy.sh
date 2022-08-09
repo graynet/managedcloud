@@ -189,6 +189,20 @@ if test -f "$DDOS"; then
 echo "$DATE: WHITELIST DDOS: $DDOS file has been removed successfully." >> $LOGFILE
 fi
 
+####################################################### RESIZE DISK ################################################
+# Resize disk to match correct storage
+GROWDISK=/usr/bin/herodeploy/grow-disk.sh
+
+# If grow disk file detected then run that puppy.
+if test -f "$GROWDISK"; then
+  echo "$DATE: DISK GROWER: $GROWDISK detected.  Running that puppy." >> $LOGFILE
+    sh $GROWDISK
+  echo "$DATE: DISK GROWER: $GROWDISK has been run successfully." >> $LOGFILE
+    rm $GROWDISK
+echo "$DATE: DISK GROWER: $GROWDISK file has been removed successfully." >> $LOGFILE
+fi
+
+
 ####################################################### CONFIG CPANEL ################################################
 # Run cPanel's Provisioning Script
 CPANEL=/usr/bin/herodeploy/cpanel.sh
