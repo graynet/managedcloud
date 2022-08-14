@@ -145,7 +145,7 @@ else
 fi
 
 ####################################################### SET MTU ################################################
-    echo "$DATE: SET MTU: Checking interface MTU setings..." >> $LOGFILE
+    echo "$DATE: SET MTU: Checking interface MTU settings..." >> $LOGFILE
 
 # Print active interface
 ip addr show | awk '/inet.*brd/{print $NF; exit}' > /usr/bin/herodeploy/interface.txt
