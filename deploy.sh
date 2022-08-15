@@ -59,7 +59,41 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 # Note: will self-destruct following first run.
 #
 ####################################################
-## 4) Send Alerts And Finish Up
+## 4) Resize/Grow Disk
+####################################################
+# We use LVM on all Managed Cloud VPS's.
+# This is hard coded for the following commands
+# parted --script /dev/sda resizepart 2 100%
+# pvresize /dev/sda2
+# lvresize --extents +100%FREE --resizefs /dev/almalinux/root
+#
+# sh /usr/bin/herodeploy/grow-disk.sh
+# Note: will self-destruct following first run.
+#
+####################################################
+## 5) Configure cPanel
+####################################################
+# If VPS uses cPanel this script sets hostname/nameserver
+# Updates /etc/wwwacct.conf (add hostname,IP,ns1/ns2)
+# Sets /etc/sysconfig/network-scripts/ifcfg to persist on reboots
+# Adds Google and Cloudflare DNS resolvers
+#
+# sh /usr/bin/herodeploy/cpanel.sh
+# Note: will self-destruct following first run.
+#
+####################################################
+## 6) Setup DNS
+####################################################
+# This script creates A records for name servers and hostname.
+# vpsXXX.nodevm.com
+# ns1.vpsXXX.nodevm.com
+# ns2.vpsXXX.nodevm.com
+#
+# sh /usr/bin/herodeploy/dns.sh
+# Note: will self-destruct following first run.
+#
+####################################################
+## 7) Send Alerts And Finish Up
 ####################################################
 # Make KCDC Sys Ops aware of deployment results and address any errors.
 # Review that DDOS protection was applied properly and distributed to BGP routers.
@@ -68,12 +102,12 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 #
 #From : "servers@namehero.com",
 #To: "ryan@heroicmail.com",
-#Subject: "Hero Deployer [ALERT]: Ports Have Been Opened On $IP",
+#Subject: "Hero Deployer [ALERT]: $HOSTNAME $IP Deployed Successfully",
 # HtmlBody: "$fulllog",
 #MessageStream": "outbound"
 #
 ####################################################
-## 5) Keep Eye On The Deployer
+## 8) Keep Eye On The Deployer
 ####################################################
 # Within 7 days of initial deployment, The Deployer:
 #
@@ -96,85 +130,84 @@ DATE=$(date '+%Y-%m-%d %H:%M:%S')
 ####################################################### START LOGGING ################################################
 # Start a log file if not one
 if [ -f "$LOGFILE" ]; then
-    echo "$DATE: $LOGFILE exists.  Previous run detected." >> $LOGFILE
+    echo "<em>$DATE:</em> $LOGFILE exists.  Previous run detected.<br>" >> $LOGFILE
 else
     touch $LOGFILE
-    echo "$DATE: $LOGFILE does not exist.  Starting one so we can get rolling!" >> $LOGFILE
+    echo "<em>$DATE:</em> $LOGFILE does not exist.  Starting one so we can get rolling!<br>" >> $LOGFILE
 fi
 
 ####################################################### GET ACTIVE IP ################################################
-echo "$DATE: Getting active hostname IP address." >> $LOGFILE
+echo "<em>$DATE:</em> Getting active hostname IP address.<br>" >> $LOGFILE
 hostname -I | awk '{print $1}' > /usr/bin/herodeploy/ip.txt
 
 # Variables for scripts
 IP=$(cat /usr/bin/herodeploy/ip.txt)
 HOSTNAME=$(hostname)
-echo "$DATE: I'm here today with $HOSTNAME on $IP." >> $LOGFILE
+echo "<em>$DATE:</em> I'm here today with $HOSTNAME on $IP.<br>" >> $LOGFILE
 
 ####################################################### UPDATE CHECK ################################################
 # Check if script needs updated
 # If the version file exists
 
 if [ -f "$VERSION" ]; then
-    echo "$DATE: $VERSION exists.  Checking for updates..." >> $LOGFILE
+    echo "<em>$DATE:</em> $VERSION exists.  Checking for updates...<br>" >> $LOGFILE
     # Get current version
     VERSION=$(cat /usr/bin/herodeploy/version.txt)
-    echo "$DATE: Current version was deployed $VERSION." >> $LOGFILE
+    echo "<em>$DATE:</em> Current version was deployed $VERSION.<br>" >> $LOGFILE
     timeago='7 days ago'
     dtSec=$(date --date "$VERSION" +'%s')
     taSec=$(date --date "$timeago" +'%s')
-    echo "$DATE: Exact version is: $dtSec." >> $LOGFILE
+    echo "<em>$DATE:</em> Exact version is: $dtSec.<br>" >> $LOGFILE
     # If version is older than 7 days download the update script and update the version file.
     [ $dtSec -lt $taSec ] && wget https://raw.githubusercontent.com/graynet/managedcloud/master/deployer.sh && echo "$DATE" > /usr/bin/herodeploy/version.txt && echo "$DATE:Version has been updated to $dtSec." >> $LOGFILE
-    echo "$DATE: No updates found.  Current version is still $dtSec" >> $LOGFILE
+    echo "<em>$DATE:</em> No updates found.  Current version is still $dtSec <br>" >> $LOGFILE
 else
-    echo "$DATE: Version file not found.  Creating one: $VERSION" >> $LOGFILE
+    echo "<em>$DATE:</em> Version file not found.  Creating one: $VERSION <br>" >> $LOGFILE
     touch /usr/bin/herodeploy/version.txt
-    echo "$DATE: Version file created.  Setting initial crontab." >> $LOGFILE
+    echo "<em>$DATE:</em> Version file created.  Setting initial crontab.<br>" >> $LOGFILE
     # Dump existing crons
     crontab -l > cron
-    echo "$DATE: Existing crons dumped." >> $LOGFILE
+    echo "<em>$DATE:</em> Existing crons dumped.<br>" >> $LOGFILE
     # Add deploy script 1 time a day M-F
     echo "00 00 * * 1-5 /usr/bin/sh /usr/bin/herodeploy/deploy.sh" >> cron
     crontab cron
-    echo "$DATE: Cronjob has been set 00 00 * * 1-5 /usr/bin/sh /usr/bin/herodeploy/deploy.sh" >> $LOGFILE
+    echo "<em>$DATE:</em> Cronjob has been set 00 00 * * 1-5 /usr/bin/sh /usr/bin/herodeploy/deploy.sh <br>" >> $LOGFILE
     rm cron
-    echo "$DATE: Cron dump file removed." >> $LOGFILE
+    echo "<em>$DATE:</em> Cron dump file removed.<br>" >> $LOGFILE
     echo "$DATE" > /usr/bin/herodeploy/version.txt
-    echo "$DATE: Current version has been set." >> $LOGFILE
+    echo "<em>$DATE:</em>: Current version has been set.<br>" >> $LOGFILE
 fi
 
 ####################################################### SET MTU ################################################
-    echo "$DATE: SET MTU: Checking interface MTU settings..." >> $LOGFILE
+    echo "<em>$DATE:</em> <strong>SET MTU:</strong> Checking interface MTU settings...<br>" >> $LOGFILE
 
 # Print active interface
 ip addr show | awk '/inet.*brd/{print $NF; exit}' > /usr/bin/herodeploy/interface.txt
 ACTIVELINK=$(cat /usr/bin/herodeploy/interface.txt)
-echo "$DATE: SET MTU: The current active interface is $ACTIVELINK" >> $LOGFILE
+echo "<em>$DATE:</em> <strong>SET MTU:</strong> The current active interface is $ACTIVELINK <br>" >> $LOGFILE
 
 if [ -f "$MTU" ]; then
   SETMTU=$(cat /usr/bin/herodeploy/setmtu.txt)
-  echo "$DATE: SET MTU: $MTU exists.  I will set active interfaces to $SETMTU." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU exists.  I will set active interfaces to $SETMTU.<br>" >> $LOGFILE
   # Set MTU on active interface to 1376 immediately and persist after reboot
   for INTERFACE in $(cat /usr/bin/herodeploy/interface.txt) ; do
       # Set the active link to correct MTU
       ip link set ${INTERFACE} mtu $SETMTU ;
-      echo "$DATE: SET MTU: The active $INTERFACE has been set to $SETMTU mtu." >> $LOGFILE ;
+      echo "<em>$DATE:</em> <strong>SET MTU:</strong> The active $INTERFACE has been set to $SETMTU mtu.<br>" >> $LOGFILE ;
   done ;
 else
   echo "1376" > $MTU
   SETMTU=$(cat /usr/bin/herodeploy/setmtu.txt)
-  echo "$DATE: SET MTU: $MTU not found.  Creating with default value $SETMTU." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU not found.  Creating with default value $SETMTU.<br>" >> $LOGFILE
   for INTERFACE in $(cat /usr/bin/herodeploy/interface.txt) ; do
     # Set the active link to correct MTU
       ip link set ${INTERFACE} mtu $SETMTU ;
-      echo "$DATE: SET MTU: The active $INTERFACE has been set to $SETMTU mtu." >> $LOGFILE ;
+      echo "<em>$DATE:</em> <strong>SET MTU:</strong> The active $INTERFACE has been set to $SETMTU mtu.<br>" >> $LOGFILE ;
     # Set MTU in interface config file.
       sed -i -e '$aMTU=1376' /etc/sysconfig/network-scripts/ifcfg-${INTERFACE} ;
-      echo "$DATE: SET MTU: /etc/sysconfig/network-scripts/ifcfg-$INTERFACE has been updated." >> $LOGFILE ;
+      echo "<em>$DATE:</em> <strong>SET MTU:</strong> /etc/sysconfig/network-scripts/ifcfg-$INTERFACE has been updated.<br>" >> $LOGFILE ;
     done ;
 fi
-
 
 ####################################################### WHITELIST DDOS ################################################
 # Open DDOS Protected Ports
@@ -182,11 +215,11 @@ DDOS=/usr/bin/herodeploy/path-whitelist.sh
 
 # If DDOS file detected then run that puppy.
 if test -f "$DDOS"; then
-  echo "$DATE: WHITELIST DDOS: $DDOS detected.  Running that puppy." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>WHITELIST DDOS:</strong> $DDOS detected.  Running that puppy.<br>" >> $LOGFILE
     sh $DDOS
-  echo "$DATE: WHITELIST DDOS: $DDOS has been run successfully." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>WHITELIST DDOS:</strong> $DDOS has been run successfully.<br>" >> $LOGFILE
     rm $DDOS
-echo "$DATE: WHITELIST DDOS: $DDOS file has been removed successfully." >> $LOGFILE
+echo "<em>$DATE:</em> <strong>WHITELIST DDOS:</strong> $DDOS file has been removed successfully.<br>" >> $LOGFILE
 fi
 
 ####################################################### RESIZE DISK ################################################
@@ -195,13 +228,12 @@ GROWDISK=/usr/bin/herodeploy/grow-disk.sh
 
 # If grow disk file detected then run that puppy.
 if test -f "$GROWDISK"; then
-  echo "$DATE: DISK GROWER: $GROWDISK detected.  Running that puppy." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>DISK GROWER:</strong> $GROWDISK detected.  Running that puppy.<br>" >> $LOGFILE
     sh $GROWDISK
-  echo "$DATE: DISK GROWER: $GROWDISK has been run successfully." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>DISK GROWER:</strong> $GROWDISK has been run successfully.<br>" >> $LOGFILE
     rm $GROWDISK
-echo "$DATE: DISK GROWER: $GROWDISK file has been removed successfully." >> $LOGFILE
+echo "<em>$DATE:</em> <strong>DISK GROWER:</strong> file has been removed successfully.<br>" >> $LOGFILE
 fi
-
 
 ####################################################### CONFIG CPANEL ################################################
 # Run cPanel's Provisioning Script
@@ -209,30 +241,28 @@ CPANEL=/usr/bin/herodeploy/cpanel.sh
 
 # If cPanel config file detected then run that puppy.
 if test -f "$CPANEL"; then
-  echo "$DATE: CONFIG CPANEL: $CPANEL detected.  Running that puppy." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL detected.  Running that puppy.<br>" >> $LOGFILE
     sh $CPANEL
-  echo "$DATE: CONFIG CPANEL: $CPANEL has been run successfully." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL has been run successfully.<br>" >> $LOGFILE
     rm $CPANEL
-  echo "$DATE: CONFIG CPANEL: $CPANEL file has been removed successfully." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL file has been removed successfully.<br>" >> $LOGFILE
   # At last finish cPanel update.
   #echo "$DATE: CONFIG CPANEL: Running cPanel update /scripts/upcp..." >> $LOGFILE
  #   /usr/local/cpanel/scripts/upcp
 fi
 
-  ####################################################### SETUP DNS ################################################
-  # Open DDOS Protected Ports
+####################################################### SETUP DNS ################################################
+# Open DDOS Protected Ports
   DNS=/usr/bin/herodeploy/dns.sh
 
   # If DNS file detected then run that puppy.
   if test -f "$DNS"; then
-    echo "$DATE: DNS CONFIG: $DNS detected.  Running that puppy." >> $LOGFILE
+    echo "<em>$DATE:</em> <strong>DNS CONFIG:</strong> $DNS detected.  Running that puppy.<br>" >> $LOGFILE
       sh $DNS
-    echo "$DATE: DNS CONFIG: $DNS has been run successfully." >> $LOGFILE
+    echo "<em>$DATE:</em> <strong>DNS CONFIG:</strong> $DNS has been run successfully.<br>" >> $LOGFILE
       rm $DNS
-  echo "$DATE: DNS CONFIG: $DNS file has been removed successfully." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>DNS CONFIG:</strong> $DNS file has been removed successfully.<br>" >> $LOGFILE
   fi
-
-
 
 ####################################################### SEND ALERTS ################################################
 # Send Email Alert
@@ -240,12 +270,12 @@ ALERT=/usr/bin/herodeploy/email-alert.sh
 
 # If alert file ran, send it!
 if test -f "$ALERT"; then
-  echo "$DATE: SEND ALERTS: $ALERT detected.  Sending log file." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>SEND ALERTS:</strong> $ALERT detected.  Sending log file.<br>" >> $LOGFILE
     sh $ALERT
-  echo "$DATE: SEND ALERTS: Email alert has been sent successfully." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>SEND ALERTS:</strong> Email alert has been sent successfully.<br>" >> $LOGFILE
     rm $ALERT
-  echo "$DATE: SEND ALERTS: $ALERT file has been removed successfully." >> $LOGFILE
+  echo "<em>$DATE:</em> <strong>SEND ALERTS:</strong> $ALERT file has been removed successfully.<br>" >> $LOGFILE
 fi
 
 ####################################################### CLOSE LOG FILE ################################################
-echo "$DATE: CLOSE LOG FILE: I have reached the end for today.  Hero Deployer Master successfully ran.  Goodbye all - drink more caffeine and work harder." >> $LOGFILE
+echo "<em>$DATE:</em> <strong>CLOSE LOG FILE:</strong> I have reached the end for today.  Hero Deployer Master successfully ran.  Goodbye all - drink more caffeine and work harder.<br>" >> $LOGFILE
