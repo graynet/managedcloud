@@ -17,7 +17,7 @@
 # Cron should be set up at least 1 time per week
 
 ####################################################
-# # 1) Setup Network MTU
+# # Setup Network MTU
 ####################################################
 # We need to first find optimal MTU:
 # $ ping REMOTE_HOSTNAME -c 10 -M do -s 1500
@@ -31,7 +31,7 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 ####################################################
 #
 ####################################################
-# # 2) Run cPanel Configuration
+# # Run cPanel Configuration
 ####################################################
 # We need to ensure cPanel is using the correct shared IP
 # as well as proper hostname/dns/and other network configs.
@@ -42,7 +42,7 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 # Note: will self-destruct following first run.
 #
 ####################################################
-## 3) Apply Website Shield DDOS Protection
+## Apply Website Shield DDOS Protection
 ####################################################
 # Ensure VM is completely protected by our "Always On"
 # DDS protection powered by Website Shield.  Will only open
@@ -59,7 +59,7 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 # Note: will self-destruct following first run.
 #
 ####################################################
-## 4) Resize/Grow Disk
+## Resize/Grow Disk
 ####################################################
 # We use LVM on all Managed Cloud VPS's.
 # This is hard coded for the following commands
@@ -71,7 +71,7 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 # Note: will self-destruct following first run.
 #
 ####################################################
-## 5) Configure cPanel
+## Configure cPanel
 ####################################################
 # If VPS uses cPanel this script sets hostname/nameserver
 # Updates /etc/wwwacct.conf (add hostname,IP,ns1/ns2)
@@ -82,7 +82,17 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 # Note: will self-destruct following first run.
 #
 ####################################################
-## 6) Setup DNS
+## Install Softaculous
+####################################################
+# This script will install and license Softaculous.
+# Downloads latest version and installs (will update if installed)
+# Orders a license for the IP instantly
+#
+# sh /usr/bin/herodeploy/softaculous.sh
+# Note: will self-destruct following first run.
+#
+####################################################
+## Setup DNS
 ####################################################
 # This script creates A records for name servers and hostname.
 # vpsXXX.nodevm.com
@@ -93,7 +103,7 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 # Note: will self-destruct following first run.
 #
 ####################################################
-## 7) Send Alerts And Finish Up
+## Send Alerts And Finish Up
 ####################################################
 # Make KCDC Sys Ops aware of deployment results and address any errors.
 # Review that DDOS protection was applied properly and distributed to BGP routers.
@@ -107,7 +117,7 @@ MTU=/usr/bin/herodeploy/setmtu.txt
 #MessageStream": "outbound"
 #
 ####################################################
-## 8) Keep Eye On The Deployer
+## Keep Eye On The Deployer
 ####################################################
 # Within 7 days of initial deployment, The Deployer:
 #
@@ -246,9 +256,19 @@ if test -f "$CPANEL"; then
   echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL has been run successfully.<br>" >> $LOGFILE
     rm $CPANEL
   echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL file has been removed successfully.<br>" >> $LOGFILE
-  # At last finish cPanel update.
-  #echo "$DATE: CONFIG CPANEL: Running cPanel update /scripts/upcp..." >> $LOGFILE
- #   /usr/local/cpanel/scripts/upcp
+fi
+
+####################################################### INSTALL SOFTACULOUS ################################################
+# License and Install Softaculous
+SOFTACULOUS=/usr/bin/herodeploy/softaculous.sh
+
+# If cPanel config file detected then run that puppy.
+if test -f "$SOFTACULOUS"; then
+  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS detected.  Running that puppy.<br>" >> $LOGFILE
+    sh $SOFTACULOUS
+  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS has been run successfully.<br>" >> $LOGFILE
+    rm $SOFTACULOUS
+  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS file has been removed successfully.<br>" >> $LOGFILE
 fi
 
 ####################################################### SETUP DNS ################################################
