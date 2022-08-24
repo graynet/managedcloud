@@ -14,4 +14,10 @@
 # But I love your trust.
 # So I am here to keep you safe.  Now drink more caffeine and work harder.
 #
-echo "$DATE: The Hero Deployer Updater has been completed." >> deploylog.txt ;
+
+# Define some variables
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+IP=$(cat /usr/bin/herodeploy/ip.txt)
+HOSTNAME=$(hostname)
+
+echo "<em>$DATE:</em> <strong>DEPLOYER:</strong> The Hero Deployer Updater has been completed.<br>" >> deploylog.txt ;

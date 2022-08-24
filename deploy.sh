@@ -27,7 +27,7 @@
 ####################################################
 # Enter optimal MTU for active interfaces and I'll set that bad boy.
 # System will default to 1376 on cloud-init.
-MTU=/usr/bin/herodeploy/setmtu.txt
+
 ####################################################
 #
 ####################################################
@@ -170,7 +170,17 @@ if [ -f "$VERSION" ]; then
     echo "<em>$DATE:</em> Exact version is: $dtSec.<br>" >> $LOGFILE
     # If version is older than 7 days download the update script and update the version file.
     [ $dtSec -lt $taSec ] && wget https://raw.githubusercontent.com/graynet/managedcloud/master/deployer.sh && echo "$DATE" > /usr/bin/herodeploy/version.txt && echo "$DATE:Version has been updated to $dtSec." >> $LOGFILE
-    echo "<em>$DATE:</em> No updates found.  Current version is still $dtSec <br>" >> $LOGFILE
+    # Run the update
+    UPDATE=/usr/bin/herodeploy/deployer.sh
+    if test -f "$UPDATE"; then
+      echo "<em>$DATE:</em> <strong>UPDATE:</strong> $UPDATE detected.  Running that puppy.<br>" >> $LOGFILE
+        sh $UPDATE
+      echo "<em>$DATE:</em> <strong>UPDATE:</strong> $UPDATE has been run successfully.<br>" >> $LOGFILE
+        rm $UPDATE
+    echo "<em>$DATE:</em> <strong>UPDATE:</strong> $UPDATE file has been removed successfully.<br>" >> $LOGFILE
+    else
+      echo "<em>$DATE:</em> No updates found.  Current version is still $dtSec <br>" >> $LOGFILE
+    fi
 else
     echo "<em>$DATE:</em> Version file not found.  Creating one: $VERSION <br>" >> $LOGFILE
     touch /usr/bin/herodeploy/version.txt
@@ -189,34 +199,17 @@ else
 fi
 
 ####################################################### SET MTU ################################################
-    echo "<em>$DATE:</em> <strong>SET MTU:</strong> Checking interface MTU settings...<br>" >> $LOGFILE
 
-# Print active interface
-ip addr show | awk '/inet.*brd/{print $NF; exit}' > /usr/bin/herodeploy/interface.txt
-ACTIVELINK=$(cat /usr/bin/herodeploy/interface.txt)
-echo "<em>$DATE:</em> <strong>SET MTU:</strong> The current active interface is $ACTIVELINK <br>" >> $LOGFILE
+# Set active interface MTU
+MTU=/usr/bin/herodeploy/mtu.sh
 
-if [ -f "$MTU" ]; then
-  SETMTU=$(cat /usr/bin/herodeploy/setmtu.txt)
-  echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU exists.  I will set active interfaces to $SETMTU.<br>" >> $LOGFILE
-  # Set MTU on active interface to 1376 immediately and persist after reboot
-  for INTERFACE in $(cat /usr/bin/herodeploy/interface.txt) ; do
-      # Set the active link to correct MTU
-      ip link set ${INTERFACE} mtu $SETMTU ;
-      echo "<em>$DATE:</em> <strong>SET MTU:</strong> The active $INTERFACE has been set to $SETMTU mtu.<br>" >> $LOGFILE ;
-  done ;
-else
-  echo "1376" > $MTU
-  SETMTU=$(cat /usr/bin/herodeploy/setmtu.txt)
-  echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU not found.  Creating with default value $SETMTU.<br>" >> $LOGFILE
-  for INTERFACE in $(cat /usr/bin/herodeploy/interface.txt) ; do
-    # Set the active link to correct MTU
-      ip link set ${INTERFACE} mtu $SETMTU ;
-      echo "<em>$DATE:</em> <strong>SET MTU:</strong> The active $INTERFACE has been set to $SETMTU mtu.<br>" >> $LOGFILE ;
-    # Set MTU in interface config file.
-      sed -i -e '$aMTU=1376' /etc/sysconfig/network-scripts/ifcfg-${INTERFACE} ;
-      echo "<em>$DATE:</em> <strong>SET MTU:</strong> /etc/sysconfig/network-scripts/ifcfg-$INTERFACE has been updated.<br>" >> $LOGFILE ;
-    done ;
+# If MTU file detected then run that puppy.
+if test -f "$MTU"; then
+  echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU detected.  Running that puppy.<br>" >> $LOGFILE
+    sh $MTU
+  echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU has been run successfully.<br>" >> $LOGFILE
+    rm $MTU
+echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU file has been removed successfully.<br>" >> $LOGFILE
 fi
 
 ####################################################### WHITELIST DDOS ################################################
