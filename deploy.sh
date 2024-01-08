@@ -169,7 +169,7 @@ if [ -f "$VERSION" ]; then
     taSec=$(date --date "$timeago" +'%s')
     echo "<em>$DATE:</em> Exact version is: $dtSec.<br>" >> $LOGFILE
     # If version is older than 7 days download the update script and update the version file.
-    [ $dtSec -lt $taSec ] && wget https://raw.githubusercontent.com/graynet/managedcloud/master/deployer.sh && echo "$DATE" > /usr/bin/herodeploy/version.txt && echo "$DATE:Version has been updated to $dtSec." >> $LOGFILE
+    [ $dtSec -lt $taSec ] && rm /usr/bin/herodeploy/deployer.sh && wget https://raw.githubusercontent.com/graynet/managedcloud/master/deployer.sh && echo "$DATE" > /usr/bin/herodeploy/version.txt && echo "$DATE:Version has been updated to $dtSec." >> $LOGFILE
     # Run the update
     UPDATE=/usr/bin/herodeploy/deployer.sh
     if test -f "$UPDATE"; then
