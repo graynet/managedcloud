@@ -103,6 +103,17 @@
 # Note: will self-destruct following first run.
 #
 ####################################################
+## Setup Imunify360
+####################################################
+# This script licenses Imunify360 Security
+#
+#
+#
+#
+# sh /usr/bin/herodeploy/cloudflare.sh
+# Note: will self-destruct following first run.
+#
+####################################################
 ## Send Alerts And Finish Up
 ####################################################
 # Make KCDC Sys Ops aware of deployment results and address any errors.
@@ -275,6 +286,19 @@ fi
     echo "<em>$DATE:</em> <strong>DNS CONFIG:</strong> $DNS has been run successfully.<br>" >> $LOGFILE
       rm $DNS
   echo "<em>$DATE:</em> <strong>DNS CONFIG:</strong> $DNS file has been removed successfully.<br>" >> $LOGFILE
+  fi
+
+####################################################### SETUP I360 ################################################
+# Setup Imunify360
+  CLOUDLINUX=/usr/bin/herodeploy/cloudlinux.sh
+
+  # If DNS file detected then run that puppy.
+  if test -f "$CLOUDFLARE"; then
+    echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX detected.  Running that puppy.<br>" >> $LOGFILE
+      sh $CLOUDLINUX
+    echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX has been run successfully.<br>" >> $LOGFILE
+      rm $CLOUDLINUX
+  echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX file has been removed successfully.<br>" >> $LOGFILE
   fi
 
 ####################################################### SEND ALERTS ################################################
