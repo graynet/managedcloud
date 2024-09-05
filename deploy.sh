@@ -293,7 +293,7 @@ fi
   CLOUDLINUX=/usr/bin/herodeploy/cloudlinux.sh
 
   # If DNS file detected then run that puppy.
-  if test -f "$CLOUDFLARE"; then
+  if test -f "$CLOUDLINUX"; then
     echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX detected.  Running that puppy.<br>" >> $LOGFILE
       sh $CLOUDLINUX
     echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX has been run successfully.<br>" >> $LOGFILE
