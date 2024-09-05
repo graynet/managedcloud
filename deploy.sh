@@ -110,9 +110,20 @@
 #
 #
 #
-# sh /usr/bin/herodeploy/cloudflare.sh
+# sh /usr/bin/herodeploy/cloudlinux.sh
 # Note: will self-destruct following first run.
 #
+####################################################
+## Setup LiteSpeed
+####################################################
+# This script installs/configures LiteSpeed
+#
+#
+#
+#
+# bash /usr/bin/herodeploy/litespeed.sh
+# Note: will self-destruct following first run.
+# MUST use bash for this guy bc syntax
 ####################################################
 ## Send Alerts And Finish Up
 ####################################################
@@ -292,13 +303,26 @@ fi
 # Setup Imunify360
   CLOUDLINUX=/usr/bin/herodeploy/cloudlinux.sh
 
-  # If DNS file detected then run that puppy.
+  # If CloudLinux.sh file detected then run that puppy.
   if test -f "$CLOUDLINUX"; then
     echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX detected.  Running that puppy.<br>" >> $LOGFILE
       sh $CLOUDLINUX
     echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX has been run successfully.<br>" >> $LOGFILE
       rm $CLOUDLINUX
   echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX file has been removed successfully.<br>" >> $LOGFILE
+  fi
+
+####################################################### SETUP LITESPEED ################################################
+# Setup LiteSpeed
+  LITESPEED=/usr/bin/herodeploy/litespeed.sh
+
+  # If Litespeed.sh file detected then run that puppy.
+  if test -f "$LITESPEED"; then
+    echo "<em>$DATE:</em> <strong>LITESPEED:</strong> $LITESPEED detected.  Running that puppy.<br>" >> $LOGFILE
+      bash $LITESPEED
+    echo "<em>$DATE:</em> <strong>LITESPEED:</strong> $LITESPEED has been run successfully.<br>" >> $LOGFILE
+      rm $LITESPEED
+  echo "<em>$DATE:</em> <strong>LITESPEED:</strong> $LITESPEED file has been removed successfully.<br>" >> $LOGFILE
   fi
 
 ####################################################### SEND ALERTS ################################################
