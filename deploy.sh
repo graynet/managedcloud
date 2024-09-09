@@ -125,6 +125,17 @@
 # Note: will self-destruct following first run.
 # MUST use bash for this guy bc syntax
 ####################################################
+## Run mySQL Tuner
+####################################################
+# This script sets my.cnf values based on system
+#
+#
+#
+#
+# sh /usr/bin/herodeploy/mysql-tuner.sh
+# Note: will self-destruct following first run.
+#
+####################################################
 ## Send Alerts And Finish Up
 ####################################################
 # Make KCDC Sys Ops aware of deployment results and address any errors.
@@ -323,6 +334,19 @@ fi
     echo "<em>$DATE:</em> <strong>LITESPEED:</strong> $LITESPEED has been run successfully.<br>" >> $LOGFILE
       rm $LITESPEED
   echo "<em>$DATE:</em> <strong>LITESPEED:</strong> $LITESPEED file has been removed successfully.<br>" >> $LOGFILE
+  fi
+
+####################################################### MYSQL TUNER ################################################
+# Tune mySQL
+  MYSQL=/usr/bin/herodeploy/mysql-tuner.sh
+
+  # If mysql-tuner.sh file detected then run that puppy.
+  if test -f "$MYSQL"; then
+    echo "<em>$DATE:</em> <strong>MYSQL TUNER:</strong> $MYSQL detected.  Running that puppy.<br>" >> $LOGFILE
+      sh $MYSQL
+    echo "<em>$DATE:</em> <strong>MYSQL TUNER:</strong> $MYSQL has been run successfully.<br>" >> $LOGFILE
+      rm $MYSQL
+  echo "<em>$DATE:</em> <strong>MYSQL TUNER:</strong> $MYSQL file has been removed successfully.<br>" >> $LOGFILE
   fi
 
 ####################################################### SEND ALERTS ################################################
