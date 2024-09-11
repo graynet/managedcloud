@@ -239,9 +239,9 @@ MTU=/usr/bin/herodeploy/mtu.sh
 # If MTU file detected then run that puppy.
 if test -f "$MTU"; then
   echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU detected.  Running that puppy.<br>" >> $LOGFILE
-    sh $MTU
+    sh $MTU && \
   echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU has been run successfully.<br>" >> $LOGFILE
-    rm $MTU
+    rm $MTU && \
 echo "<em>$DATE:</em> <strong>SET MTU:</strong> $MTU file has been removed successfully.<br>" >> $LOGFILE
 fi
 
@@ -252,9 +252,9 @@ DDOS=/usr/bin/herodeploy/path-whitelist.sh
 # If DDOS file detected then run that puppy.
 if test -f "$DDOS"; then
   echo "<em>$DATE:</em> <strong>WHITELIST DDOS:</strong> $DDOS detected.  Running that puppy.<br>" >> $LOGFILE
-    sh $DDOS
+    sh $DDOS && \
   echo "<em>$DATE:</em> <strong>WHITELIST DDOS:</strong> $DDOS has been run successfully.<br>" >> $LOGFILE
-    rm $DDOS
+    rm $DDOS && \
 echo "<em>$DATE:</em> <strong>WHITELIST DDOS:</strong> $DDOS file has been removed successfully.<br>" >> $LOGFILE
 fi
 
@@ -265,9 +265,9 @@ GROWDISK=/usr/bin/herodeploy/grow-disk.sh
 # If grow disk file detected then run that puppy.
 if test -f "$GROWDISK"; then
   echo "<em>$DATE:</em> <strong>DISK GROWER:</strong> $GROWDISK detected.  Running that puppy.<br>" >> $LOGFILE
-    sh $GROWDISK
+    sh $GROWDISK && \
   echo "<em>$DATE:</em> <strong>DISK GROWER:</strong> $GROWDISK has been run successfully.<br>" >> $LOGFILE
-    rm $GROWDISK
+    rm $GROWDISK && \
 echo "<em>$DATE:</em> <strong>DISK GROWER:</strong> file has been removed successfully.<br>" >> $LOGFILE
 fi
 
@@ -278,9 +278,9 @@ CPANEL=/usr/bin/herodeploy/cpanel.sh
 # If cPanel config file detected then run that puppy.
 if test -f "$CPANEL"; then
   echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL detected.  Running that puppy.<br>" >> $LOGFILE
-    sh $CPANEL
+    sh $CPANEL && \
   echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL has been run successfully.<br>" >> $LOGFILE
-    rm $CPANEL
+    rm $CPANEL && \
   echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL file has been removed successfully.<br>" >> $LOGFILE
 fi
 
@@ -291,9 +291,9 @@ SOFTACULOUS=/usr/bin/herodeploy/softaculous.sh
 # If cPanel config file detected then run that puppy.
 if test -f "$SOFTACULOUS"; then
   echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS detected.  Running that puppy.<br>" >> $LOGFILE
-    sh $SOFTACULOUS
+    sh $SOFTACULOUS && \
   echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS has been run successfully.<br>" >> $LOGFILE
-    rm $SOFTACULOUS
+    rm $SOFTACULOUS && \
   echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS file has been removed successfully.<br>" >> $LOGFILE
 fi
 
@@ -304,9 +304,9 @@ fi
   # If DNS file detected then run that puppy.
   if test -f "$DNS"; then
     echo "<em>$DATE:</em> <strong>DNS CONFIG:</strong> $DNS detected.  Running that puppy.<br>" >> $LOGFILE
-      sh $DNS
+      sh $DNS && \
     echo "<em>$DATE:</em> <strong>DNS CONFIG:</strong> $DNS has been run successfully.<br>" >> $LOGFILE
-      rm $DNS
+      rm $DNS && \
   echo "<em>$DATE:</em> <strong>DNS CONFIG:</strong> $DNS file has been removed successfully.<br>" >> $LOGFILE
   fi
 
@@ -317,9 +317,9 @@ fi
   # If CloudLinux.sh file detected then run that puppy.
   if test -f "$CLOUDLINUX"; then
     echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX detected.  Running that puppy.<br>" >> $LOGFILE
-      sh $CLOUDLINUX
+      sh $CLOUDLINUX && \
     echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX has been run successfully.<br>" >> $LOGFILE
-      rm $CLOUDLINUX
+      rm $CLOUDLINUX && \
   echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX file has been removed successfully.<br>" >> $LOGFILE
   fi
 
@@ -330,9 +330,9 @@ fi
   # If Litespeed.sh file detected then run that puppy.
   if test -f "$LITESPEED"; then
     echo "<em>$DATE:</em> <strong>LITESPEED:</strong> $LITESPEED detected.  Running that puppy.<br>" >> $LOGFILE
-      bash $LITESPEED
+      bash $LITESPEED && \
     echo "<em>$DATE:</em> <strong>LITESPEED:</strong> $LITESPEED has been run successfully.<br>" >> $LOGFILE
-      rm $LITESPEED
+      rm $LITESPEED && \
   echo "<em>$DATE:</em> <strong>LITESPEED:</strong> $LITESPEED file has been removed successfully.<br>" >> $LOGFILE
   fi
 
@@ -343,9 +343,9 @@ fi
   # If mysql-tuner.sh file detected then run that puppy.
   if test -f "$MYSQL"; then
     echo "<em>$DATE:</em> <strong>MYSQL TUNER:</strong> $MYSQL detected.  Running that puppy.<br>" >> $LOGFILE
-      sh $MYSQL
+      sh $MYSQL && \
     echo "<em>$DATE:</em> <strong>MYSQL TUNER:</strong> $MYSQL has been run successfully.<br>" >> $LOGFILE
-      rm $MYSQL
+      rm $MYSQL && \
   echo "<em>$DATE:</em> <strong>MYSQL TUNER:</strong> $MYSQL file has been removed successfully.<br>" >> $LOGFILE
   fi
 
@@ -356,9 +356,9 @@ ALERT=/usr/bin/herodeploy/email-alert.sh
 # If alert file ran, send it!
 if test -f "$ALERT"; then
   echo "<em>$DATE:</em> <strong>SEND ALERTS:</strong> $ALERT detected.  Sending log file.<br>" >> $LOGFILE
-    sh $ALERT
+    sh $ALERT && \
   echo "<em>$DATE:</em> <strong>SEND ALERTS:</strong> Email alert has been sent successfully.<br>" >> $LOGFILE
-    rm $ALERT
+    rm $ALERT && \
   echo "<em>$DATE:</em> <strong>SEND ALERTS:</strong> $ALERT file has been removed successfully.<br>" >> $LOGFILE
 fi
 
