@@ -317,7 +317,7 @@ fi
   # If CloudLinux.sh file detected then run that puppy.
   if test -f "$CLOUDLINUX"; then
     echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX detected.  Running that puppy.<br>" >> $LOGFILE
-      sh $CLOUDLINUX && \
+      bash $CLOUDLINUX && \
     echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX has been run successfully.<br>" >> $LOGFILE
       rm $CLOUDLINUX && \
   echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX file has been removed successfully.<br>" >> $LOGFILE
