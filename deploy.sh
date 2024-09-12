@@ -284,19 +284,6 @@ if test -f "$CPANEL"; then
   echo "<em>$DATE:</em> <strong>CONFIG CPANEL:</strong> $CPANEL file has been removed successfully.<br>" >> $LOGFILE
 fi
 
-####################################################### INSTALL SOFTACULOUS ################################################
-# License and Install Softaculous
-SOFTACULOUS=/usr/bin/herodeploy/softaculous.sh
-
-# If cPanel config file detected then run that puppy.
-if test -f "$SOFTACULOUS"; then
-  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS detected.  Running that puppy.<br>" >> $LOGFILE
-    sh $SOFTACULOUS && \
-  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS has been run successfully.<br>" >> $LOGFILE
-    rm $SOFTACULOUS && \
-  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS file has been removed successfully.<br>" >> $LOGFILE
-fi
-
 ####################################################### SETUP DNS ################################################
 # Open DDOS Protected Ports
   DNS=/usr/bin/herodeploy/dns.sh
@@ -322,6 +309,19 @@ fi
       rm $CLOUDLINUX && \
   echo "<em>$DATE:</em> <strong>CLOUDLINUX:</strong> $CLOUDLINUX file has been removed successfully.<br>" >> $LOGFILE
   fi
+
+####################################################### INSTALL SOFTACULOUS ################################################
+# License and Install Softaculous
+SOFTACULOUS=/usr/bin/herodeploy/softaculous.sh
+
+# If cPanel config file detected then run that puppy.
+if test -f "$SOFTACULOUS"; then
+  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS detected.  Running that puppy.<br>" >> $LOGFILE
+    sh $SOFTACULOUS && \
+  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS has been run successfully.<br>" >> $LOGFILE
+    rm $SOFTACULOUS && \
+  echo "<em>$DATE:</em> <strong>SOFTACULOUS:</strong> $SOFTACULOUS file has been removed successfully.<br>" >> $LOGFILE
+fi
 
 ####################################################### SETUP LITESPEED ################################################
 # Setup LiteSpeed
